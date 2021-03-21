@@ -1,0 +1,28 @@
+<source>
+  @id docker-log-input
+  @type unix
+  path /fluentd/var/run/unix.sock
+</source>
+
+# cf. https://docs.datadoghq.com/integrations/fluentd/
+<source>
+  @id monitor-agent
+  @type monitor_agent
+  bind 0.0.0.0
+  port 24220
+</source>
+
+<match docker.**>
+  @id docker-log-output
+  @type forward
+
+  <buffer>
+    flush_interval 1s
+  </buffer>
+
+  <server>
+    name <%= ENV['FLUENTD_AGGREGATOR_HOST'] %>
+    host <%= ENV['FLUENTD_AGGREGATOR_HOST'] %>
+    port <%= ENV.fetch('FLUENTD_AGGREGATOR_PORT', 24224) %>
+  </server>
+</match>
