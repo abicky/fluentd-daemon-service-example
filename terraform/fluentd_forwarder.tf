@@ -26,10 +26,12 @@ resource "aws_ecs_task_definition" "fluentd_forwarder" {
       "mountPoints": [
         { "containerPath": "/fluentd/var/run", "sourceVolume": "var-run-fluentd" }
       ],
-      "portMappings": [
-        { "containerPort": 24220, "hostPort": 24220 }
-      ],
-      "user": "root"
+      "user": "root",
+      "dockerLabels": {
+        "com.datadoghq.ad.check_names": "[\"fluentd\"]",
+        "com.datadoghq.ad.init_configs": "[{}]",
+        "com.datadoghq.ad.instances": "[{\"monitor_agent_url\": \"http://%%host%%:24220/api/plugins.json\"}]"
+      }
     }
   ]
   JSON

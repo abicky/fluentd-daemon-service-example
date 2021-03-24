@@ -21,11 +21,6 @@ resource "aws_ecs_task_definition" "datadog_agent" {
           "awslogs-stream-prefix": "datadog-agent"
         }
       },
-      "dockerLabels": {
-        "com.datadoghq.ad.check_names": "[\"fluentd\"]",
-        "com.datadoghq.ad.init_configs": "[{}]",
-        "com.datadoghq.ad.instances": "[{\"monitor_agent_url\": \"http://%%host%%:24220/api/plugins.json\"}]"
-      },
       "mountPoints": [
         {
           "containerPath": "/var/run/docker.sock",
@@ -56,8 +51,6 @@ resource "aws_ecs_task_definition" "datadog_agent" {
     }
   ]
   JSON
-
-  network_mode = "host"
 
   volume {
     name      = "docker_sock"
